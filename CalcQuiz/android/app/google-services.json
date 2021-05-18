@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "384686274026",
+    "project_id": "calcquiz-dd700",
+    "storage_bucket": "calcquiz-dd700.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384686274026:android:44082953a8b835d4cc2e93",
+        "android_client_info": {
+          "package_name": "com.aj.calc_quiz.calc_quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384686274026-kg03802odavcv0gsmf060boqg9n7dpaj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aj.calc_quiz.calc_quiz",
+            "certificate_hash": "1b5250cf6bdcd73ae2eba9693fc83fa407f89393"
+          }
+        },
+        {
+          "client_id": "384686274026-9f5t3cvbo2kt354a1e07v8d7ij0nha0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARG9ul-lTmjuS6L1fQ6YG_K59CUVmRhB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384686274026-9f5t3cvbo2kt354a1e07v8d7ij0nha0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
