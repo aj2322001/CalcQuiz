@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:calc_quiz/services/lev_sublev.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:calc_quiz/blocs/auth_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,7 @@ class _ProfileState extends State<Profile> {
   int dataSubLev;
   final databaseReference = FirebaseDatabase.instance.reference();
   List<int> myList = [];
+  int myVal = 0;
   static int level = 1;
   static int subLev = 1;
   StreamSubscription<User> loginStateSubscription;
@@ -29,28 +31,6 @@ class _ProfileState extends State<Profile> {
       if(fbUser == null){
         Navigator.pushReplacementNamed(context, '/login');
       }
-      databaseReference.once().then((DataSnapshot snapshot) {
-        var indUid = fbUser.uid;
-        // print('val= $indUid');
-        Map<dynamic, dynamic> values = snapshot.value;
-        // print('all Accounts : ${snapshot.value}');
-        values.forEach((key,values) {
-          myList.clear();
-          if(key==indUid){
-            print('value: $values');
-            int lev = values['level'];
-            myList.add(lev);
-            int sublev = values['subLevel'];
-            myList.add(sublev);
-            print('$lev, $sublev');
-            setState(() {
-            level = myList[0];
-            subLev = myList[1];
-            print('yo');
-            });
-          }
-        });
-      });
     });
     // super.initState();
   }
@@ -64,23 +44,24 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
-    // final databaseReference = FirebaseDatabase.instance.reference();
-    dataSubLev = ModalRoute.of(context).settings.arguments;
-    int myVal = dataSubLev!=null ? dataSubLev:0;
-    print('myVal = $myVal');
-    // print(myList);
-    // if(myList.isNotEmpty){
-    //   level = myList[0];
-    //   subLev = myList[1];
-    // }
-    // level = myList[0];
-    // subLev = myList[1];
-    subLev += myVal;
-    print(subLev);
-    if (subLev>5){
+    try {
+      dataSubLev = ModalRoute
+          .of(context)
+          .settings
+          .arguments;
+      myVal = dataSubLev != null ? dataSubLev : 0;
+      print('myVal = $myVal');
+      subLev += myVal;
+      print(subLev);
+      if (subLev>5){
         level += 1;
         subLev = 0;
-    };
+      };
+    }catch(e){
+      final args = ModalRoute.of(context).settings.arguments as LevSublev;
+      level = args.cLevel;
+      subLev = args.cSublev;
+    }
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -255,7 +236,7 @@ class _ProfileState extends State<Profile> {
             borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
         ),
-        delay: Duration(seconds: 3),
+        delay: Duration(seconds: 1),
         slidingCurve: Curves.bounceOut,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -275,7 +256,7 @@ class _ProfileState extends State<Profile> {
           // shape: CircularNotchedRectangle(),
           // color: Colors.amber[300],
         ),
-        delay: Duration(seconds: 2),
+        delay: Duration(milliseconds: 500),
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:calc_quiz/blocs/auth_bloc.dart';
+import 'package:calc_quiz/services/lev_sublev.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +17,27 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   StreamSubscription<User> loginStateSubscription;
-
+  final databaseReference = FirebaseDatabase.instance.reference();
+  int lev,sublev;
   @override
   void initState() {
     var authBloc = Provider.of<AuthBloc>(context, listen: false);
+
     loginStateSubscription = authBloc.currentUser.listen((fbUser) {
       if (fbUser != null) {
-        Navigator.pushReplacementNamed(context, '/profile');
+        databaseReference.once().then((DataSnapshot snapshot) {
+          var indUid = fbUser.uid;
+          Map<dynamic, dynamic> values = snapshot.value;
+          values.forEach((key,values) {
+            if(key==indUid){
+              lev = values['level'];
+              sublev = values['subLevel'];
+              print('in: $lev, $sublev');
+              Navigator.pushReplacementNamed(context, '/profile',arguments: LevSublev(cLevel: lev,cSublev: sublev));
+            }
+          });
+        });
+        // Navigator.pushReplacementNamed(context, '/profile');
       }
     });
     super.initState();
@@ -32,7 +48,6 @@ class _LoginState extends State<Login> {
     loginStateSubscription.cancel();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +156,7 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.only(bottom: 75),
           child: googleLoginButton(),
         ),
-        delay: Duration(seconds: 2),
+        delay: Duration(seconds: 3),
         // slidingCurve: Curves.bounceOut,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

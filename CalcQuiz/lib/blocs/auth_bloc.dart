@@ -7,7 +7,6 @@ class AuthBloc{
   final authService = AuthService();
   final googleSignIn = GoogleSignIn(scopes: ['email']);
   Stream<User> get currentUser => authService.currentUser;
-  UserCredential resCopy;
 
   loginGoogle() async{
     try{
@@ -20,7 +19,7 @@ class AuthBloc{
       //Firebase Sign in
       final result = await authService.signInWithCredential(credential);
       print('${result.user.displayName}');
-      resCopy = result;
+
       final databaseReference = FirebaseDatabase.instance.reference();
 
       //create new database
@@ -29,8 +28,9 @@ class AuthBloc{
         databaseReference
             .child('${result.user.uid}')
             .set({'email': result.user.email, 'level': 1, 'subLevel': 1});
+        print('new database item Created');
       }
-      print('new database item Created');
+
     }catch(error){
       print(error);
     }
