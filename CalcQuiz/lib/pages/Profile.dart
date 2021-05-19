@@ -55,7 +55,7 @@ class _ProfileState extends State<Profile> {
       print(subLev);
       if (subLev>5){
         level += 1;
-        subLev = 0;
+        subLev = 1;
       };
     }catch(e){
       final args = ModalRoute.of(context).settings.arguments as LevSublev;

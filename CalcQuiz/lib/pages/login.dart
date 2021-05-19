@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -19,12 +20,14 @@ class _LoginState extends State<Login> {
   StreamSubscription<User> loginStateSubscription;
   final databaseReference = FirebaseDatabase.instance.reference();
   int lev,sublev;
+  bool onClickedBtn = false;
   @override
   void initState() {
     var authBloc = Provider.of<AuthBloc>(context, listen: false);
 
     loginStateSubscription = authBloc.currentUser.listen((fbUser) {
       if (fbUser != null) {
+        onClickedBtn = true;
         databaseReference.once().then((DataSnapshot snapshot) {
           var indUid = fbUser.uid;
           Map<dynamic, dynamic> values = snapshot.value;
@@ -52,6 +55,84 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
+    Row rowbe = Row(
+      children: [
+        Text(
+          'Sign In with ',
+          style: TextStyle(
+              color: Colors.amber, letterSpacing: 0.5, wordSpacing: 0.5),
+        ),
+        //fancy Google name in button
+        Text(
+          'G',
+          style: TextStyle(color: Colors.blueAccent[100]),
+        ),
+        Text(
+          'o',
+          style: TextStyle(color: Colors.redAccent[100]),
+        ),
+        Text(
+          'o',
+          style: TextStyle(color: Colors.yellowAccent[100]),
+        ),
+
+        Text(
+          'g',
+          style: TextStyle(color: Colors.blueAccent[100]),
+        ),
+        Text(
+          'l',
+          style: TextStyle(color: Colors.greenAccent[100]),
+        ),
+        Text(
+          'e',
+          style: TextStyle(color: Colors.redAccent[100]),
+        ),
+      ],
+    );
+    Row rowaf = Row(
+      children: [
+        Text(
+          'Signing you In with ',
+          style: TextStyle(
+              color: Colors.amber, letterSpacing: 0.5, wordSpacing: 0.5),
+        ),
+        //fancy Google name in button
+        Text(
+          'G',
+          style: TextStyle(color: Colors.blueAccent[100]),
+        ),
+        Text(
+          'o',
+          style: TextStyle(color: Colors.redAccent[100]),
+        ),
+        Text(
+          'o',
+          style: TextStyle(color: Colors.yellowAccent[100]),
+        ),
+
+        Text(
+          'g',
+          style: TextStyle(color: Colors.blueAccent[100]),
+        ),
+        Text(
+          'l',
+          style: TextStyle(color: Colors.greenAccent[100]),
+        ),
+        Text(
+          'e',
+          style: TextStyle(color: Colors.redAccent[100]),
+        ),
+        SizedBox(width: 10.0,),
+        SizedBox(
+          height: 25.0,
+          child: SpinKitChasingDots(
+            color: Colors.amber,
+            size: 25,
+          ),
+        ),
+      ],
+    );
 
     Widget googleLoginButton() {
       return ElevatedButton.icon(
@@ -59,41 +140,7 @@ class _LoginState extends State<Login> {
           'assets/google_logo.png',
           height: 35.0,
         ),
-        label: Row(
-          children: [
-            Text(
-              'Sign In with ',
-              style: TextStyle(
-                  color: Colors.amber, letterSpacing: 0.5, wordSpacing: 0.5),
-            ),
-            //fancy Google name in button
-            Text(
-              'G',
-              style: TextStyle(color: Colors.blueAccent[100]),
-            ),
-            Text(
-              'o',
-              style: TextStyle(color: Colors.redAccent[100]),
-            ),
-            Text(
-              'o',
-              style: TextStyle(color: Colors.yellowAccent[100]),
-            ),
-
-            Text(
-              'g',
-              style: TextStyle(color: Colors.blueAccent[100]),
-            ),
-            Text(
-              'l',
-              style: TextStyle(color: Colors.greenAccent[100]),
-            ),
-            Text(
-              'e',
-              style: TextStyle(color: Colors.redAccent[100]),
-            ),
-          ],
-        ),
+        label: onClickedBtn == true ? rowaf : rowbe, //true by default
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 17.0),
           primary: Colors.grey[800],
@@ -103,7 +150,12 @@ class _LoginState extends State<Login> {
           onSurface: Colors.grey,
           elevation: 10.0,
         ),
-        onPressed: () => authBloc.loginGoogle(),
+        onPressed: () => {
+          setState(() {
+          onClickedBtn = true;
+          }),
+          authBloc.loginGoogle()
+        },
       );
     }
 
